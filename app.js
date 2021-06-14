@@ -5,8 +5,10 @@ const db = require('./models')
 
 const port = 3000
 
-app.engine('handlebars', handlebars({defaultLayout: 'main'}))
+app.engine('handlebars', handlebars({ defaultLayout: 'main' }))
 app.set('view engine', 'handlebars')
+
+app.use(express.urlencoded({ extended: true }))
 
 app.listen(port, () => {
   db.sequelize.sync() // 同步資料庫
