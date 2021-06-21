@@ -14,10 +14,16 @@ const categoryController = {
   postCategory: (req, res) => {
     const { categoryName } = req.body
 
-    return Category.create({ name: categoryName })
-      .then(() => {
-        return res.redirect('/admin/categories')
-      })
+    if (categoryName) {
+      req.flash('error_messages', 'name didn\'t exist')
+      return res.redirect('back')
+    } else {
+      return Category.create({ name: categoryName })
+        .then(() => {
+          return res.redirect('/admin/categories')
+        })
+    }
+
   },
 
   editCategory: (req, res) => {
