@@ -32,7 +32,7 @@ const categoryController = {
         return Category.findByPk(id)
           .then(category => {
             category = category.toJSON()
-            
+
             return res.render('admin/editCategory', { category, categories })
           })
       })
@@ -51,8 +51,18 @@ const categoryController = {
       .then(() => {
         return res.redirect('/admin/categories')
       })
+  },
 
+  deleteCategory: (req, res) => {
+    const id = req.params.id
 
+    return Category.findByPk(id)
+      .then(category => {
+        return category.destroy()
+      })
+      .then(() => {
+        return res.redirect('/admin/categories')
+      })
   }
 }
 
