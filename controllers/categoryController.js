@@ -38,7 +38,7 @@ const categoryController = {
           .then(category => {
             category = category.toJSON()
 
-            return res.render('admin/editCategory', { category, categories })
+            return res.render('admin/categories', { category, categories })
           })
       })
   },
