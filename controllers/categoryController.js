@@ -8,8 +8,16 @@ const categoryController = {
       nest: true
     })
       .then(categories => {
-        console.log(categories)
         return res.render('admin/categories', { categories })
+      })
+  },
+
+  postCategory: (req, res) => {
+    const { categoryName } = req.body
+    console.log('@@@@', categoryName)
+    return Category.create({ name: categoryName })
+      .then(() => {
+        return res.redirect('/admin/categories')
       })
   }
 }

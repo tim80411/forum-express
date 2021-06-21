@@ -1,5 +1,5 @@
 module.exports = {
-  ifCon: function (a, b, options) {
+  ifCond: function (a, b, options) {
     if (a === b) {
       return options.fn(this)
     }
