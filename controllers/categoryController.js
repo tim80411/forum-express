@@ -6,8 +6,7 @@ const categoryController = {
     Category.findAll({
       raw: true,
       nest: true
-    })
-      .then(categories => {
+    }).then(categories => {
         return res.render('admin/categories', { categories })
       })
   },

@@ -1,15 +1,18 @@
 <h1>餐廳後台</h1>
 <p class="lead">
-  <a href="/admin/restaurants">Restaurants</a> | <a href="/admin/users">Users</a> | <strong>Categories</strong>
+  <a href="/admin/restaurants">Restaurants</a> |
+  <a href="/admin/users">Users</a> |
+  <strong>Categories</strong>
 </p>
 
-<form class="form-inline" method="POST" action="/admin/categories">
-  <div class="form-group mr-2 my-2">
-    <label for="categoryName" class="sr-only">categoryName</label>
-    <input type="text" class="form-control" id="categoryName" name="categoryName" placeholder="categoryName">
-  </div>
-  <button type="submit" class="btn btn-primary my-2">submit</button>
-</form>
+<div class="p-3 my-3 text-white-50 bg-purple rounded shadow-sm">
+  <form class="form-inline" method="POST" action="/admin/categories">
+    <div class="form-group mr-2">
+      <input type="text" class="form-control" id="categoryName" name="categoryName" placeholder="categoryName">
+    </div>
+    <button type="submit" class="btn btn-primary">submit</button>
+  </form>
+</div>
 
 <br />
 <br />
