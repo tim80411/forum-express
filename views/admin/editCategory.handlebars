@@ -1,0 +1,44 @@
+<h1>餐廳後台</h1>
+<p class="lead">
+  <a href="/admin/restaurants">Restaurants</a> | <a href="/admin/users">Users</a> | <strong>Categories</strong>
+</p>
+
+<form class="form-inline" method="POST" action="/admin/categories/{{category.id}}?_method=PUT">
+  <div class="form-group mr-2 my-2">
+    <label for="categoryName" class="sr-only">categoryName</label>
+    <input type="text" class="form-control" id="categoryName" name="categoryName" value="{{category.name}}" placeholder="categoryName">
+  </div>
+  <button type="submit" class="btn btn-primary my-2 mr-2">submit</button>
+  <a class="lead" href="/admin/categories">or Create New</a>
+</form>
+
+<br />
+<br />
+
+<table class="table">
+  <thead class="thead-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Category Name</th>
+      <th scope="col">#</th>
+    </tr>
+  </thead>
+  <tbody>
+    {{#each categories}}
+    <tr>
+      <th scope="row">{{this.id}}</th>
+      <td>{{this.name}}</td>
+      <td>
+        <button type="button" class="btn btn-link">
+          <a href="/admin/categories/{{this.id}}">
+            Edit
+          </a>
+        </button>
+        <form action="/admin/categories/{{this.id}}?_method=DELETE" method="POST" style="display: inline;">
+          <button type="submit" class="btn btn-link">Delete</button>
+        </form>
+      </td>
+    </tr>
+    {{/each}}
+  </tbody>
+</table>

@@ -14,11 +14,45 @@ const categoryController = {
 
   postCategory: (req, res) => {
     const { categoryName } = req.body
-    console.log('@@@@', categoryName)
+
     return Category.create({ name: categoryName })
       .then(() => {
         return res.redirect('/admin/categories')
       })
+  },
+
+  editCategory: (req, res) => {
+    const id = req.params.id
+
+    return Category.findAll({
+      raw: true,
+      nest: true
+    })
+      .then(categories => {
+        return Category.findByPk(id)
+          .then(category => {
+            category = category.toJSON()
+            
+            return res.render('admin/editCategory', { category, categories })
+          })
+      })
+  },
+
+  putCategory: (req, res) => {
+    const { categoryName } = req.body
+    const id = req.params.id
+
+    return Category.findByPk(id)
+      .then(category => {
+        category.update({
+          name: categoryName
+        })
+      })
+      .then(() => {
+        return res.redirect('/admin/categories')
+      })
+
+
   }
 }
 
