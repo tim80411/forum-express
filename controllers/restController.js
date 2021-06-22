@@ -41,7 +41,6 @@ const restController = {
         raw: true,
         nest: true
       }).then(categories => {
-        console.log('@@@@@', categoryId)
         return res.render('restaurants', {
           restaurants: data,
           categories: categories,
