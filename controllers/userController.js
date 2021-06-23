@@ -4,6 +4,8 @@ const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
 
 const db = require('../models')
 const User = db.User
+const Comment = db.Comment
+const Restaurant = db.Restaurant
 
 const userController = {
   signUpPage: (req, res) => {
@@ -52,12 +54,29 @@ const userController = {
 
   getUser: (req, res) => {
     const id = req.user.id
+    let count = 0
 
     return User.findByPk(id)
       .then(user => {
-        user = user.toJSON()
+        return Comment.findAndCountAll({
+          where: {
+            UserId: id
+          },
+          include: [
+            Restaurant
+          ],
+          raw: true,
+          nest: true
+        }).then(comments => {
+          count = comments.count
+          user = user.toJSON()
 
-        return res.render('user', { user })
+          return res.render('user', {
+            user,
+            comments,
+            count
+          })
+        })
       })
   },
 
