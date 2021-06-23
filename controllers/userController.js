@@ -54,6 +54,7 @@ const userController = {
     res.redirect('/signin')
   },
 
+  // TODO: 要能夠瀏覽其他人的user profile
   getUser: (req, res) => {
     const id = helpers.getUser(req).id
     let count = 0
