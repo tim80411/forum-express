@@ -67,7 +67,7 @@ const restController = {
     }).then(restaurant => {
       // TODO: 同IP不重複增加瀏覽數
       restaurant.increment({
-        'viewCount': 1
+        'viewCounts': 1
       }).then(() => {
         return res.render('restaurnat', {
           restaurant: restaurant.toJSON()
