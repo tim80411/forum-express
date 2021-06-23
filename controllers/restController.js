@@ -65,8 +65,13 @@ const restController = {
         { model: Comment, include: [User] }
       ]
     }).then(restaurant => {
-      return res.render('restaurnat', {
-        restaurant: restaurant.toJSON()
+      // TODO: 同IP不重複增加瀏覽數
+      restaurant.increment({
+        'viewCount': 1
+      }).then(() => {
+        return res.render('restaurnat', {
+          restaurant: restaurant.toJSON()
+        })
       })
     })
   },
