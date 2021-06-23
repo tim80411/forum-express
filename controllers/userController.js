@@ -1,6 +1,13 @@
 const bcrypt = require('bcryptjs')
+const imgur = require('imgur-node-api')
+const IMGUR_CLIENT_ID = process.env.IMGUR_CLIENT_ID
+
 const db = require('../models')
 const User = db.User
+const Comment = db.Comment
+const Restaurant = db.Restaurant
+
+const helpers = require('../_helpers')
 
 const userController = {
   signUpPage: (req, res) => {
@@ -45,6 +52,83 @@ const userController = {
     req.flash('success_messages', '登出成功！')
     req.logout()
     res.redirect('/signin')
+  },
+
+  getUser: (req, res) => {
+    const id = helpers.getUser(req).id
+    let count = 0
+
+    return User.findByPk(id)
+      .then(user => {
+        return Comment.findAndCountAll({
+          where: {
+            UserId: id
+          },
+          include: [
+            Restaurant
+          ],
+          raw: true,
+          nest: true
+        }).then(comments => {
+          count = comments.count
+          user = user.toJSON()
+
+          return res.render('user', {
+            user,
+            comments,
+            count
+          })
+        })
+      })
+  },
+
+  editUser: (req, res) => {
+    const id = helpers.getUser(req).id
+
+    return User.findByPk(id)
+      .then(user => {
+        user = user.toJSON()
+
+        return res.render('editUser', { user })
+      })
+  },
+
+  putUser: (req, res) => {
+    const id = helpers.getUser(req).id
+    const { name } = req.body
+    const { file } = req
+
+    if (!name) {
+      req.flash('error_messages', '姓名不得為空')
+      return res.redirect(`/users/${id}/edit`)
+    }
+
+    if (file) {
+      imgur.setClientID(IMGUR_CLIENT_ID)
+      imgur.upload(file.path, (err, img) => {
+        return User.findByPk(id)
+          .then(user => {
+            return user.update({
+              name,
+              image: img ? img.data.link : user.img
+            })
+          })
+          .then(user => {
+            return res.redirect(`/users/${user.id}`)
+          })
+      })
+    } else {
+      return User.findByPk(id)
+        .then(user => {
+          return user.update({
+            name,
+            image: user.img
+          })
+        })
+        .then(user => {
+          return res.redirect(`/users/${user.id}`)
+        })
+    }
   }
 }
 
