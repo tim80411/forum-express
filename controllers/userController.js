@@ -7,6 +7,8 @@ const User = db.User
 const Comment = db.Comment
 const Restaurant = db.Restaurant
 
+const helpers = require('../_helpers')
+
 const userController = {
   signUpPage: (req, res) => {
     return res.render('signup')
@@ -53,7 +55,7 @@ const userController = {
   },
 
   getUser: (req, res) => {
-    const id = req.user.id
+    const id = helpers.getUser(req).id
     let count = 0
 
     return User.findByPk(id)
@@ -81,7 +83,7 @@ const userController = {
   },
 
   editUser: (req, res) => {
-    const id = req.user.id
+    const id = helpers.getUser(req).id
 
     return User.findByPk(id)
       .then(user => {
@@ -92,7 +94,7 @@ const userController = {
   },
 
   putUser: (req, res) => {
-    const id = req.user.id
+    const id = helpers.getUser(req).id
     const { name } = req.body
     const { file } = req
 
