@@ -4,6 +4,8 @@ const Category = db.Category
 const Comment = db.Comment
 const User = db.User
 
+const helpers = require('../_helpers')
+
 const pageLimit = 10
 
 const restController = {
@@ -36,7 +38,8 @@ const restController = {
       const data = result.rows.map(r => ({
         ...r.dataValues,
         description: r.dataValues.description.substring(0, 50),
-        categoryName: r.Category.name
+        categoryName: r.Category.name,
+        isFavorited: helpers.getUser(req).FavoritedRestaurants.map(d => d.id).includes(r.id)
       }))
 
       Category.findAll({
@@ -62,15 +65,19 @@ const restController = {
     return Restaurant.findByPk(id, {
       include: [
         Category,
-        { model: Comment, include: [User] }
+        { model: Comment, include: [User] },
+        { model: User, as: 'FavoritedUsers' },
       ]
     }).then(restaurant => {
+      const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id)
+
       // TODO: 同IP不重複增加瀏覽數
       restaurant.increment({
         'viewCounts': 1
       }).then(() => {
-        return res.render('restaurnat', {
-          restaurant: restaurant.toJSON()
+        return res.render('restaurant', {
+          restaurant: restaurant.toJSON(),
+          isFavorited
         })
       })
     })
