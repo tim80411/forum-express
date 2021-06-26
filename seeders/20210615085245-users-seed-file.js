@@ -10,7 +10,8 @@ module.exports = {
       isAdmin: true,
       name: 'root',
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
+      image: 'https://loremflickr.com/320/240/people/?random=1'
     }, {
       id: 2,
       email: 'user1@example.com',
@@ -18,7 +19,8 @@ module.exports = {
       isAdmin: false,
       name: 'user1',
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
+      image: 'https://loremflickr.com/320/240/people/?random=2'
     }, {
       id: 3,
       email: 'user2@example.com',
@@ -26,7 +28,8 @@ module.exports = {
       isAdmin: false,
       name: 'user2',
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
+      image: 'https://loremflickr.com/320/240/people/?random=3'
     }], {})
   },
 
