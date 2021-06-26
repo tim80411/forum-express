@@ -16,7 +16,7 @@ const removeRepeatObjInArr = (arr) => {
   const pool = new Map()
 
   for (i = 0; i < arr.length; i++) {
-    if (pool.has(`${arr[i].Restaurant.id}`)){
+    if (pool.has(`${arr[i].Restaurant.id}`)) {
       continue
     } else {
       pool.set(`${arr[i].Restaurant.id}`, i)
@@ -72,9 +72,8 @@ const userController = {
     res.redirect('/signin')
   },
 
-  // TODO: 要能夠瀏覽其他人的user profile
   getUser: (req, res) => {
-    const id = req.user.id
+    const id = req.params.id
 
     return User.findByPk(id, {
       include: [
@@ -83,10 +82,9 @@ const userController = {
         {
           model: Comment,
           attributes: ['id'],
-          include:
-            [
-              { model: Restaurant, attributes: ['id', 'image'] }
-            ]
+          include: [
+            { model: Restaurant, attributes: ['id', 'image'] }
+          ]
         },
         { model: Restaurant, as: 'FavoritedRestaurants', attributes: ['image', 'id'] }
       ]
@@ -102,6 +100,11 @@ const userController = {
 
   editUser: (req, res) => {
     const id = req.user.id
+
+    if (req.params.id !== id) {
+      req.flash('error_messages', '很抱歉，你並非此帳戶擁有人')
+      res.redirect('back')
+    }
 
     return User.findByPk(id)
       .then(user => {
