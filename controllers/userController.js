@@ -10,6 +10,23 @@ const Favorite = db.Favorite
 const Like = db.Like
 const Followship = db.Followship
 
+const removeRepeatObjInArr = (arr) => {
+  let arrNoRepeat = []
+
+  const pool = new Map()
+
+  for (i = 0; i < arr.length; i++) {
+    if (pool.has(`${arr[i].Restaurant.id}`)){
+      continue
+    } else {
+      pool.set(`${arr[i].Restaurant.id}`, i)
+      arrNoRepeat.push(arr[i])
+    }
+  }
+
+  return arrNoRepeat
+}
+
 const userController = {
   signUpPage: (req, res) => {
     return res.render('signup')
@@ -76,6 +93,8 @@ const userController = {
     })
       .then(user => {
         user = user.toJSON()
+
+        user.Comments = removeRepeatObjInArr(user.Comments)
 
         return res.render('user', { user })
       })
