@@ -101,9 +101,9 @@ const userController = {
   editUser: (req, res) => {
     const id = req.user.id
 
-    if (req.params.id !== id) {
+    if (Number(req.params.id) !== id) {
       req.flash('error_messages', '很抱歉，你並非此帳戶擁有人')
-      res.redirect('back')
+      return res.redirect('back')
     }
 
     return User.findByPk(id)
@@ -218,15 +218,21 @@ const userController = {
     })
   },
 
-  // TODO: 限制使用者追蹤自己
   addFollowing: (req, res) => {
-    return Followship.create({
-      followerId: req.user.id,
-      followingId: req.params.userId
-    })
-      .then((followship) => {
-        return res.redirect('back')
+    console.log(req.user.id, req.params.userId)
+
+    if (req.user.id === Number(req.params.userId)) {
+      req.flash('error_messages', '抱歉，你無法追蹤自己~')
+      return res.redirect('back')
+    } else {
+      return Followship.create({
+        followerId: req.user.id,
+        followingId: req.params.userId
       })
+        .then((followship) => {
+          return res.redirect('back')
+        })
+    }
   },
 
   removeFollowing: (req, res) => {
