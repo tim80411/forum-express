@@ -39,8 +39,8 @@ const restController = {
         ...r.dataValues,
         description: r.dataValues.description.substring(0, 50),
         categoryName: r.Category.name,
-        isFavorited: helpers.getUser(req).FavoritedRestaurants.map(d => d.id).includes(r.id),
-        isLiked: helpers.getUser(req).LikedRestaurants.map(d => d.id).includes(r.id)
+        isFavorited: req.user.FavoritedRestaurants.map(d => d.id).includes(r.id),
+        isLiked: req.user.LikedRestaurants.map(d => d.id).includes(r.id)
       }))
 
       Category.findAll({
@@ -71,8 +71,8 @@ const restController = {
         { model: User, as: 'LikedUsers' }
       ]
     }).then(restaurant => {
-      const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(helpers.getUser(req).id)
-      const isLiked = restaurant.LikedUsers.map(d => d.id).includes(helpers.getUser(req).id)
+      const isFavorited = restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id)
+      const isLiked = restaurant.LikedUsers.map(d => d.id).includes(req.user.id)
 
       // TODO: 同IP不重複增加瀏覽數
       restaurant.increment({
@@ -139,7 +139,7 @@ const restController = {
         ...restaurant.dataValues,
         favoritedCount: restaurant.FavoritedUsers.length,
         description: restaurant.description.slice(0, 50),
-        isFavorited: restaurant.FavoritedUsers.map(d => d.id).includes(helpers.getUser(req).id)
+        isFavorited: restaurant.FavoritedUsers.map(d => d.id).includes(req.user.id)
       }))
 
       restaurants.sort((a, b) => b.favoritedCount - a.favoritedCount)

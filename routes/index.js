@@ -17,7 +17,7 @@ module.exports = (app, passport) => {
   }
   const authenticatedAdmin = (req, res, next) => {
     if (helpers.ensureAuthenticated(req)) {
-      if (helpers.getUser(req).isAdmin) { return next() }
+      if (req.user.isAdmin) { return next() }
       return res.redirect('/')
     }
     res.redirect('/signin')

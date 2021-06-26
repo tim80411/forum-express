@@ -59,7 +59,7 @@ const userController = {
 
   // TODO: 要能夠瀏覽其他人的user profile
   getUser: (req, res) => {
-    const id = helpers.getUser(req).id
+    const id = req.user.id
     let count = 0
 
     return User.findByPk(id)
@@ -87,7 +87,7 @@ const userController = {
   },
 
   editUser: (req, res) => {
-    const id = helpers.getUser(req).id
+    const id = req.user.id
 
     return User.findByPk(id)
       .then(user => {
@@ -98,7 +98,7 @@ const userController = {
   },
 
   putUser: (req, res) => {
-    const id = helpers.getUser(req).id
+    const id = req.user.id
     const { name } = req.body
     const { file } = req
 
@@ -137,7 +137,7 @@ const userController = {
 
   addFavorite: (req, res) => {
     return Favorite.create({
-      UserId: helpers.getUser(req).id,
+      UserId: req.user.id,
       RestaurantId: req.params.restaurantId
     }).then(() => {
       return res.redirect('back')
@@ -147,7 +147,7 @@ const userController = {
   removeFavorite: (req, res) => {
     return Favorite.findOne({
       where: {
-        UserId: helpers.getUser(req).id,
+        UserId: req.user.id,
         RestaurantId: req.params.restaurantId
       }
     })
@@ -161,7 +161,7 @@ const userController = {
 
   addLike: (req, res) => {
     return Like.create({
-      UserId: helpers.getUser(req).id,
+      UserId: req.user.id,
       RestaurantId: req.params.restaurantId
     }).then(() => {
       return res.redirect('back')
@@ -171,7 +171,7 @@ const userController = {
   removeLike: (req, res) => {
     return Like.findOne({
       where: {
-        UserId: helpers.getUser(req).id,
+        UserId: req.user.id,
         RestaurantId: req.params.restaurantId
       }
     })
@@ -192,7 +192,7 @@ const userController = {
       users = users.map(user => ({
         ...user.dataValues,
         FollowerCount: user.Followers.length,
-        isFollowed: helpers.getUser(req).Followings.map(d => d.id).includes(user.id)
+        isFollowed: req.user.Followings.map(d => d.id).includes(user.id)
       }))
 
       users = users.sort((a, b) => b.FollowerCount - a.FollowerCount)
