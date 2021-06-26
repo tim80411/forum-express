@@ -10,8 +10,6 @@ const Favorite = db.Favorite
 const Like = db.Like
 const Followship = db.Followship
 
-const helpers = require('../_helpers')
-
 const userController = {
   signUpPage: (req, res) => {
     return res.render('signup')
@@ -60,29 +58,26 @@ const userController = {
   // TODO: 要能夠瀏覽其他人的user profile
   getUser: (req, res) => {
     const id = req.user.id
-    let count = 0
 
-    return User.findByPk(id)
+    return User.findByPk(id, {
+      include: [
+        { model: User, as: 'Followers', attributes: ['image', 'id'] },
+        { model: User, as: 'Followings', attributes: ['image', 'id'] },
+        {
+          model: Comment,
+          attributes: ['id'],
+          include:
+            [
+              { model: Restaurant, attributes: ['id', 'image'] }
+            ]
+        },
+        { model: Restaurant, as: 'FavoritedRestaurants', attributes: ['image', 'id'] }
+      ]
+    })
       .then(user => {
-        return Comment.findAndCountAll({
-          where: {
-            UserId: id
-          },
-          include: [
-            Restaurant
-          ],
-          raw: true,
-          nest: true
-        }).then(comments => {
-          count = comments.count
-          user = user.toJSON()
+        user = user.toJSON()
 
-          return res.render('user', {
-            user,
-            comments,
-            count
-          })
-        })
+        return res.render('user', { user })
       })
   },
 
@@ -201,6 +196,7 @@ const userController = {
     })
   },
 
+  // TODO: 限制使用者追蹤自己
   addFollowing: (req, res) => {
     return Followship.create({
       followerId: req.user.id,
