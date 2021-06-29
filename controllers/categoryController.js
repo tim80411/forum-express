@@ -11,18 +11,15 @@ const categoryController = {
   },
 
   postCategory: (req, res) => {
-    const { categoryName } = req.body
+    return categoryService.postCategory(req, res, data => {
+      if (data.status === 'error') {
+        req.flash('error_messages', data.message)
+        return res.redirect('back')
+      }
 
-    if (categoryName) {
-      req.flash('error_messages', 'name didn\'t exist')
-      return res.redirect('back')
-    } else {
-      return Category.create({ name: categoryName })
-        .then(() => {
-          return res.redirect('/admin/categories')
-        })
-    }
-
+      req.flash('success_messages', data.message)
+      return res.redirect('/admin/categories')
+    })
   },
 
   editCategory: (req, res) => {
