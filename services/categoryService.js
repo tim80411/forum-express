@@ -46,6 +46,21 @@ const categoryService = {
         return cb({ status: 'error', message: 'update process got wrong' })
       })
   },
+
+  deleteCategory: (req, res, cb) => {
+    const id = req.params.id
+
+    return Category.findByPk(id)
+      .then(category => {
+        return category.destroy()
+      })
+      .then(() => {
+        return cb({ status: 'success', message: 'category was successfully deleted' })
+      })
+      .catch(error => {
+        return cb({ status: 'error', message: 'delete process got wrong' })
+      })
+  }
 }
 
 module.exports = categoryService

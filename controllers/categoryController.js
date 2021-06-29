@@ -52,15 +52,15 @@ const categoryController = {
   },
 
   deleteCategory: (req, res) => {
-    const id = req.params.id
-
-    return Category.findByPk(id)
-      .then(category => {
-        return category.destroy()
-      })
-      .then(() => {
-        return res.redirect('/admin/categories')
-      })
+    return categoryService.deleteCategory(req, res, data => {
+      if (data.status === 'error') {
+        req.flash('error_messages', data.message)
+      } else {
+        req.flash('success_messages', data.message)
+      }
+      
+      return res.redirect('/admin/categories')
+    })
   }
 }
 
