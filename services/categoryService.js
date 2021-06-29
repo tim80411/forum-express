@@ -24,6 +24,28 @@ const categoryService = {
     }
 
   },
+
+  putCategory: (req, res, cb) => {
+    const { categoryName } = req.body
+    const id = req.params.id
+
+    if (!categoryName) {
+      return cb({ status: 'error', message: "name didn't exist" })
+    }
+
+    return Category.findByPk(id)
+      .then(category => {
+        category.update({
+          name: categoryName
+        })
+      })
+      .then(() => {
+        return cb({ status: 'success', message: 'category was successfully updated' })      
+      })
+      .catch(error => {
+        return cb({ status: 'error', message: 'update process got wrong' })
+      })
+  },
 }
 
 module.exports = categoryService

@@ -40,18 +40,15 @@ const categoryController = {
   },
 
   putCategory: (req, res) => {
-    const { categoryName } = req.body
-    const id = req.params.id
+    return categoryService.putCategory(req, res, data => {
+      if (data.status === 'error') {
+        req.flash('error_messages', data.message)
+        return res.redirect('back')
+      }
 
-    return Category.findByPk(id)
-      .then(category => {
-        category.update({
-          name: categoryName
-        })
-      })
-      .then(() => {
-        return res.redirect('/admin/categories')
-      })
+      req.flash('success_messages', data.message)
+      return res.redirect('/admin/categories')
+    })
   },
 
   deleteCategory: (req, res) => {
