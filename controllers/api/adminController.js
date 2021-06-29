@@ -1,8 +1,5 @@
 const adminService = require('../../services/adminService')
 
-const db = require('../../models')
-const Restaurant = db.Restaurant
-
 const adminController = {
   getRestaurants: (req, res) => {
     return adminService.getRestaurants(req, res, (data) => {
@@ -22,6 +19,11 @@ const adminController = {
     })
   },
 
+  postRestaurant: (req, res) => {
+    return adminService.postRestaurant(req, res, (data) => {
+      return res.json(data)
+    })
+  },
 
 }
 

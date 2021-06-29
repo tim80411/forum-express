@@ -12,7 +12,7 @@ const adminService = require('../services/adminService')
 const adminController = {
   getRestaurants: (req, res) => {
     return adminService.getRestaurants(req, res, (data) => {
-      return res.render('admin/restaurants',  data)
+      return res.render('admin/restaurants', data)
     })
   },
 
@@ -28,50 +28,21 @@ const adminController = {
   },
 
   postRestaurant: (req, res) => {
-    if (!req.body.name) {
-      req.flash('error_messages', "name didn't exist")
-      return res.redirect('back')
-    }
+    return adminService.postRestaurant(req, res, (data) => {
+      if (data.status === 'error') {
+        req.flash('error_messages', data.message)
+        return res.redirect('back')
+      }
 
-    const { file } = req
-    if (file) {
-      imgur.setClientID(IMGUR_CLIENT_ID)
-      imgur.upload(file.path, (err, img) => {
-        return Restaurant.create({
-          name: req.body.name,
-          tel: req.body.tel,
-          address: req.body.address,
-          opening_hours: req.body.opening_hours,
-          description: req.body.description,
-          image: file ? img.data.link : null,
-          CategoryId: req.body.categoryId
-        })
-          .then((restaurant) => {
-            req.flash('success_messages', 'restaurant was successfully created')
-            res.redirect('/admin/restaurants')
-          })
-      })
-    } else {
-      return Restaurant.create({
-        name: req.body.name,
-        tel: req.body.tel,
-        address: req.body.address,
-        opening_hours: req.body.opening_hours,
-        description: req.body.description,
-        image: null,
-        CategoryId: req.body.categoryId
-      }).then((restaurant) => {
-        req.flash('success_messages', 'restaurant was successfully created')
-        return res.redirect('/admin/restaurants')
-      })
-    }
+      req.flash('success_messages', data.message)
+      return res.redirect('/admin/restaurants')
+    })
+
   },
 
   getRestaurant: (req, res) => {
     return adminService.getRestaurant(req, res, (data) => {
-      return res.render('admin/restaurant', {
-        restaurant: data.toJSON()
-      })
+      return res.render('admin/restaurant', data)
     })
   },
 
