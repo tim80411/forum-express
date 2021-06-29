@@ -6,6 +6,24 @@ const categoryController = {
       return res.json(data)
     })
   },
+
+  postCategory: (req, res) => {
+    return categoryService.postCategory(req, res, data => {
+      return res.json(data)
+    })
+  },
+
+  putCategory: (req, res) => {
+    return categoryService.putCategory(req, res, data => {
+      return res.json(data)
+    })
+  },
+
+  deleteCategory: (req, res) => {
+    return categoryService.deleteCategory(req, res, data => {
+      return res.json(data)
+    })
+  }
 }
 
 module.exports = categoryController

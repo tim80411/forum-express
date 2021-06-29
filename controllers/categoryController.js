@@ -11,18 +11,15 @@ const categoryController = {
   },
 
   postCategory: (req, res) => {
-    const { categoryName } = req.body
+    return categoryService.postCategory(req, res, data => {
+      if (data.status === 'error') {
+        req.flash('error_messages', data.message)
+        return res.redirect('back')
+      }
 
-    if (categoryName) {
-      req.flash('error_messages', 'name didn\'t exist')
-      return res.redirect('back')
-    } else {
-      return Category.create({ name: categoryName })
-        .then(() => {
-          return res.redirect('/admin/categories')
-        })
-    }
-
+      req.flash('success_messages', data.message)
+      return res.redirect('/admin/categories')
+    })
   },
 
   editCategory: (req, res) => {
@@ -43,30 +40,27 @@ const categoryController = {
   },
 
   putCategory: (req, res) => {
-    const { categoryName } = req.body
-    const id = req.params.id
+    return categoryService.putCategory(req, res, data => {
+      if (data.status === 'error') {
+        req.flash('error_messages', data.message)
+        return res.redirect('back')
+      }
 
-    return Category.findByPk(id)
-      .then(category => {
-        category.update({
-          name: categoryName
-        })
-      })
-      .then(() => {
-        return res.redirect('/admin/categories')
-      })
+      req.flash('success_messages', data.message)
+      return res.redirect('/admin/categories')
+    })
   },
 
   deleteCategory: (req, res) => {
-    const id = req.params.id
-
-    return Category.findByPk(id)
-      .then(category => {
-        return category.destroy()
-      })
-      .then(() => {
-        return res.redirect('/admin/categories')
-      })
+    return categoryService.deleteCategory(req, res, data => {
+      if (data.status === 'error') {
+        req.flash('error_messages', data.message)
+      } else {
+        req.flash('success_messages', data.message)
+      }
+      
+      return res.redirect('/admin/categories')
+    })
   }
 }
 
