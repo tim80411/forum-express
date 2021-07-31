@@ -20,6 +20,6 @@ before_script:
 
 
 deploy:
-  provider: heroku:https://git.heroku.com/lit-cliffs-37717.git
+  provider: heroku
   edge: true # opt in to dpl v2
   app: afternoon-mountain-41135
