@@ -17,3 +17,9 @@ before_install:
 # 在執行測試之前的指令
 before_script:
   - sequelize db:migrate
+
+
+deploy:
+  provider: heroku:https://git.heroku.com/lit-cliffs-37717.git
+  edge: true # opt in to dpl v2
+  app: afternoon-mountain-41135
