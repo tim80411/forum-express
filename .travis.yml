@@ -23,4 +23,6 @@ deploy:
   provider: heroku
   edge: true # opt in to dpl v2
   app: afternoon-mountain-41135
+  on:
+    branch: develop
   run: npx sequelize db:migrate
