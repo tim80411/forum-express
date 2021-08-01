@@ -18,14 +18,14 @@ before_install:
 before_script:
   - sequelize db:migrate
 
-stages:
-- name: deploy
-  if: branch = develop
+# build情況：master, develop及PR都會build
+if: (branch IN (master, develop)) OR (type = pull_request)
 
+# 所有的PR都不會進deploy
 deploy:
   provider: heroku
   edge: true # opt in to dpl v2
   app: afternoon-mountain-41135
   on:
-    branch: develop
+    branch: (develop, master) # 只有develop, master會自動deploy
   run: npx sequelize db:migrate
