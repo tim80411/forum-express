@@ -18,6 +18,9 @@ before_install:
 before_script:
   - sequelize db:migrate
 
+stages:
+- name: deploy
+  if: branch = develop
 
 deploy:
   provider: heroku
